@@ -1,0 +1,101 @@
+openapi: 3.0.1
+info:
+  title: title
+  description: This service provides features which allow to retrieve
+    account balance and transactions
+  termsOfService: TBD
+  version: 1.0.0
+servers:
+  - url: http://localhost:9095/v1/accounts
+paths:
+  /accounts/{accountNumber}/balances:
+    get:
+      tags:
+        - Account Balance
+      summary: Retrieve the account balance
+      operationId: get_balance
+      parameters:
+        - in: path
+          name: accountNumber
+          schema:
+            type: string
+          description: The account number
+          required: true
+      responses:
+        200:
+          $ref: '#/components/responses/Balance'
+  /accounts/{accountNumber}/transactions:
+    get:
+      tags:
+        - Account Transactions
+      summary: Retrieve account transactions
+      operationId: get_transactions
+      parameters:
+        - in: path
+          name: accountNumber
+          description: The account number
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: type
+          description: The transaction type
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: time_range
+          description: 'time range (if giving a range it should separated by ~. eg: 2021-01-01~2021-01-24) '
+          example: Today,Last 7 Days,Last Month
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: page_size
+          description: page size
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: page
+          description: page number
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          $ref: '#/components/responses/TransactionsResponse'
+
+components:
+  responses:
+    Balance:
+      description: Account balance
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              accountNumber:
+                type: string
+              balance:
+                type: integer
+              lastUpdatedTimeStamp:
+                type: string
+                format: datetime
+
+    TransactionsResponse:
+      description: transactions Response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              accountNumber:
+                type: string
+              type:
+                type: string
+              amount:
+                type: integer
+              transactionTime:
+                type: string
+                format: datetime

@@ -1,0 +1,33 @@
+server:
+  port: 9095
+
+spring:
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: new-group
+      topic: TOPIC_TEST
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: com.ibm.demo.model
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  #logging
+  logging:
+    level:
+      root: DEBUG
+      org.mongodb.driver: WARN
+
+  #db
+  data:
+    mongodb:
+      database: DataFeed
+      uri: mongodb://localhost:27017
