@@ -9,9 +9,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.support.PageableExecutionUtils;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 public class TransactionRepositoryCustomImpl implements TransactionRepositoryCustom {
@@ -20,33 +18,8 @@ public class TransactionRepositoryCustomImpl implements TransactionRepositoryCus
     private MongoTemplate mongoTemplate;
 
     @Override
-    public Page<Transaction> findByAccountNumberAndType(String accountNumber, String type, String timeRange, Pageable pageable) {
-
-        LocalDateTime fromDate = null;
-        LocalDateTime toDate = null;
-        if (timeRange != null) {
-            switch (timeRange) {
-                case "Today":
-                    fromDate = LocalDate.now().atStartOfDay();
-                    toDate = LocalDateTime.now();
-                    break;
-                case "Last 7 Days":
-                    fromDate = LocalDate.now().minusDays(7).atStartOfDay();
-                    toDate = LocalDateTime.now();
-                    break;
-                case "Last Month":
-                    fromDate = LocalDate.now().minusMonths(1).atStartOfDay();
-                    toDate = LocalDateTime.now();
-                    break;
-            }
-
-            if (timeRange.contains("~")) {
-                String[] dates = timeRange.split("~");
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                fromDate = LocalDate.parse(dates[0], formatter).atStartOfDay();
-                toDate = LocalDate.parse(dates[1], formatter).atStartOfDay();
-            }
-        }
+    public Page<Transaction> findByAccountNumberAndType(String accountNumber, String type,
+                                                        LocalDateTime fromDate, LocalDateTime toDate, Pageable pageable) {
 
         Query query = new Query().with(pageable);
 

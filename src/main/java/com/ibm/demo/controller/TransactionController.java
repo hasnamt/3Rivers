@@ -2,11 +2,10 @@ package com.ibm.demo.controller;
 
 import com.ibm.demo.model.Transaction;
 import com.ibm.demo.model.TransactionResponse;
-import com.ibm.demo.repository.TransactionsRepository;
+import com.ibm.demo.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class TransactionController {
 
     @Autowired
-    private final TransactionsRepository transactionsRepository;
+    private final TransactionService service;
 
     @GetMapping("/accounts/{accountNumber}/transactions")
     public ResponseEntity<TransactionResponse> getTransactions(@PathVariable String accountNumber,
@@ -26,7 +25,7 @@ public class TransactionController {
                                                                @RequestParam(value = "page", required = false, defaultValue = "0") Integer page) {
 
 
-        Page<Transaction> pages = transactionsRepository.findByAccountNumberAndType(accountNumber, type, timeRange, PageRequest.of(page, pageSize));
+        Page<Transaction> pages = service.findTransactions(accountNumber, type, timeRange, page, pageSize);
 
         TransactionResponse transactionResponse = new TransactionResponse();
         transactionResponse.setTotalPages(pages.getTotalPages());

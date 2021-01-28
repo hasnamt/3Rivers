@@ -1,6 +1,5 @@
 package com.ibm.demo;
 
-import com.ibm.demo.common.AppConstants;
 import com.ibm.demo.model.Transaction;
 import com.ibm.demo.model.TransactionType;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +50,7 @@ public class AggregateServiceApplication {
     public void saveCreateUserLog(Transaction transaction) {
         logger.info(String.format("User created -> %s", transaction.getTransactionTime()));
 
-        this.kafkaTemplate.send(AppConstants.TOPIC_TRANSACTION_CREATE, transaction);
+        //   this.kafkaTemplate.send(AppConstants.TOPIC_TRANSACTION_CREATE, transaction);
     }
 
 
